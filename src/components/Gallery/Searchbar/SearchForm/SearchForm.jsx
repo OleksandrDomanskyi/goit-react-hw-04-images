@@ -1,47 +1,36 @@
-import { Component } from "react";
+import { useState, memo } from 'react';
 import PropTypes from "prop-types";
 
 import styles from './search-form.module.scss';
 
-class SearchForm extends Component {
+const SearchForm = ({ onSubmit }) => {
 
-    state = {
-        q: ""
+    const [q, setQ] = useState("");
+
+    const handleChange = ({ target }) => {
+        const { value } = target;
+        setQ(value);
     };
 
-    handleChange = ({ target }) => {
-        const { name, value } = target;
-        this.setState({
-            [name]: value
-        })
-    };
-
-    handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
-        const { q } = this.state;
-        this.props.onSubmit({ q });
-        this.reset();
+        onSubmit({ q });
+        reset();
     };
 
-    reset() {
-        this.setState({
-            q: ""
-        })
+    const reset = () => {
+        setQ("")
     };
 
-    render() {
-        const { handleChange, handleSubmit } = this;
-        const { q } = this.state;
-
-        return (
-            <form className={styles.form} onSubmit={handleSubmit}>
-                <button type="submit" className={styles.button}>
+    return (
+        <form className={styles.form} onSubmit={handleSubmit}>
+            <button type="submit" className={styles.button}>
                 <span className={styles.label}>Search</span>
-                </button>
+            </button>
 
-                <input
+            <input
                 value={q}
-                name="q"
+                name='q'
                 onChange={handleChange}
                 className={styles.input}
                 type="text"
@@ -49,14 +38,13 @@ class SearchForm extends Component {
                 autoFocus
                 placeholder="Search images and photos"
                 required
-                />
-            </form>
-        )
-    }
-}
+            />
+        </form>
+    );
+};
 
 SearchForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
 }
 
-export default SearchForm;
+export default memo(SearchForm);
